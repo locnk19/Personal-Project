@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
-    [SerializeField] private float health = 100;
+    [SerializeField] public float health = 100;
+    [SerializeField] private GameManager gameManager;
     
     public void Hit(float damage)
     {
@@ -13,7 +14,7 @@ public class PlayerManager : MonoBehaviour
 
         if(health <= 0)
         {
-            SceneManager.LoadScene(0);
+            gameManager.EndGame();
         }
     }
 

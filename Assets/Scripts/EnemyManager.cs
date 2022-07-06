@@ -6,16 +6,24 @@ using UnityEngine.AI;
 public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private GameObject player;
+    [SerializeField] private float lifeTime;
     [SerializeField] private Animator enemyAnimator;
     [SerializeField] private float damage = 20f;
     [SerializeField] private float health = 100f;
+    [SerializeField] public GameManager gameManager;
+
+    private Collider enemiesCollider;
 
     public void Hit(float damage)
     {
         health -= damage;
         if(health <= 0)
         {
-            Destroy(gameObject);
+            enemyAnimator.SetBool("IsDying", true);
+            enemiesCollider = GetComponent<Collider>();
+            enemiesCollider.enabled = !enemiesCollider.enabled;
+            Destroy(gameObject, lifeTime);
+            gameManager.enemiesAlive--;
         }
     }
     void Start()
@@ -27,7 +35,7 @@ public class EnemyManager : MonoBehaviour
     void Update()
     {
         GetComponent<NavMeshAgent>().destination = player.transform.position;
-        if(GetComponent<NavMeshAgent>().velocity.magnitude > 1)
+        if(GetComponent<NavMeshAgent>().velocity.magnitude > 3)
         {
             enemyAnimator.SetBool("IsRunning", true);
         }
