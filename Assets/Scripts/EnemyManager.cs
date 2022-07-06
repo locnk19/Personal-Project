@@ -13,6 +13,8 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] public GameManager gameManager;
 
     private Collider enemiesCollider;
+    private NavMeshAgent navMeshAgent;
+
 
     public void Hit(float damage)
     {
@@ -21,6 +23,9 @@ public class EnemyManager : MonoBehaviour
         {
             enemyAnimator.SetBool("IsDying", true);
             enemiesCollider = GetComponent<Collider>();
+            var enemyManager = GetComponent<EnemyManager>();
+            enemyManager.enabled = false;
+            gameManager.zombiesKilled++;
             enemiesCollider.enabled = !enemiesCollider.enabled;
             Destroy(gameObject, lifeTime);
             gameManager.enemiesAlive--;

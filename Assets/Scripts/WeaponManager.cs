@@ -7,6 +7,8 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private GameObject playerCam;
     [SerializeField] private float range = 100f;
     [SerializeField] private float damage = 25f;
+    [SerializeField] private AudioSource _fireSound;
+    [SerializeField] private GameObject hitEffectPrefab;
     public Animator playerAnimator;
 
     // Start is called before the first frame update
@@ -18,21 +20,17 @@ public class WeaponManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerAnimator.GetBool("IsShooting"))
-        {
-            playerAnimator.SetBool("IsShooting", false);
-        }
 
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
-            //Debug.Log("Shoot");
+            PlayFireSound();
             Shoot();
         }   
     }
 
     void Shoot()
     {
-        playerAnimator.SetBool("IsShooting", true);
+        playerAnimator.SetTrigger("IsShooting 0");
 
         RaycastHit hit;
 
@@ -45,7 +43,24 @@ public class WeaponManager : MonoBehaviour
             {
                 enemyManager.Hit(damage);
             }
+            else
+            {
+                CreateHitEffect(hit);
+            }
 
         }
+    }
+
+    private void PlayFireSound()
+    {
+        _fireSound.Play();
+    }
+
+    private void CreateHitEffect(RaycastHit hitInfo)
+    {
+        Quaternion holeRotation = Quaternion.LookRotation(hitInfo.normal);
+        var hole = Instantiate(hitEffectPrefab, hitInfo.point, holeRotation);
+        hole.transform.position += hole.transform.forward / 1000;
+        Destroy(hole, 5f);
     }
 }

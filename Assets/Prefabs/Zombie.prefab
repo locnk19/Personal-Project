@@ -1505,7 +1505,6 @@ MonoBehaviour:
   damage: 20
   health: 100
   gameManager: {fileID: 0}
-  collider: {fileID: 8700421266100071605}
 --- !u!54 &7121116095161757416
 Rigidbody:
   m_ObjectHideFlags: 0
